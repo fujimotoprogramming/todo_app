@@ -1,4 +1,5 @@
 import React from 'react';
+import TodoItem from './TodoItem';
 
 type Todo = {
   id: number;
@@ -9,18 +10,20 @@ type Todo = {
 
 type TodoListProps = {
   todos: Todo[];
+  onTodoDelete: (todoId: number) => void;
 };
 
-const TodoList: React.FC<TodoListProps> = ({ todos }) => {
+const TodoList: React.FC<TodoListProps> = ({ todos, onTodoDelete }) => {
+  const handleTodoDelete = (todoId: number) => {
+    onTodoDelete(todoId);
+  };
+
   return (
-    <ul className="todo-list">
+    <div>
       {todos.map((todo) => (
-        <li key={todo.id}>
-          <h3>{todo.title}</h3>
-          <p>{todo.description}</p>
-        </li>
+        <TodoItem key={todo.id} todo={todo} onDelete={handleTodoDelete} />
       ))}
-    </ul>
+    </div>
   );
 };
 
