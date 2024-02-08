@@ -1,26 +1,41 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useEffect, useState } from 'react';
+import { getTodos } from './api';
 import './App.css';
+import TodoForm from './components/TodoForm';
+import TodoList from './components/TodoList';
 
-function App() {
+// Todoの型定義
+type Todo = {
+  id: number;
+  title: string;
+  description: string;
+  completed: boolean;
+};
+
+const App = () => {
+  // Todoリストの初期値を空の配列に設定
+  const [todos, setTodos] = useState<Todo[]>([]);
+
+  useEffect(() => {
+    const fetchTodos = async () => {
+      try {
+        const todosData = await getTodos();
+        setTodos(todosData);
+      } catch (error) {
+        console.error('Error while fetching todos:', error);
+      }
+    };
+
+    fetchTodos();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>ToDo App</h1>
+      <TodoForm />
+      <TodoList todos={todos} />
     </div>
   );
-}
+};
 
 export default App;
